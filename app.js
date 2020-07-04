@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 const placesRoutes = require("./routes/places-routes");
 const usersRoutes = require("./routes/users-routes");
@@ -9,6 +10,8 @@ const HttpError = require("./models/http-error");
 const app = express();
 
 app.use(bodyParser.json());
+
+app.use(cors());
 
 app.use("/api/places", placesRoutes);
 app.use("/api/users", usersRoutes);
@@ -27,7 +30,7 @@ app.use((error, req, res, next) => {
 
 mongoose
     .connect(
-        "mongodb+srv://hyunho:vX3z0RhUB6S77ZRC@cluster0-dzgjd.mongodb.net/places?retryWrites=true&w=majority"
+        "mongodb+srv://hyunho:vX3z0RhUB6S77ZRC@cluster0-dzgjd.mongodb.net/trippic?retryWrites=true&w=majority"
     )
     .then(() => {
         console.log("DB 연결 성공");

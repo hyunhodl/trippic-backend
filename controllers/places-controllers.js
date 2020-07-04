@@ -5,7 +5,6 @@ const HttpError = require("../models/http-error");
 const { getCoordsForAddress } = require("../util/location");
 const Place = require("../models/place");
 const User = require("../models/user");
-const { findById } = require("../models/place");
 
 const getPlaceById = async (req, res, next) => {
     const placeId = req.params.placeId;

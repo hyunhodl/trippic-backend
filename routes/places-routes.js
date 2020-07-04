@@ -2,8 +2,6 @@ const express = require("express");
 const { check } = require("express-validator");
 
 const placesControllers = require("../controllers/places-controllers");
-const { route } = require("./users-routes");
-const place = require("../models/place");
 
 const router = express.Router();
 
