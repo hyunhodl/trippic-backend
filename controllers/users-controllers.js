@@ -37,7 +37,7 @@ const signup = async (req, res, next) => {
         name,
         email,
         password,
-        imageUrl: req.file.path,
+        image: req.file.path,
         places: [],
     });
 
