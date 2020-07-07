@@ -15,7 +15,6 @@ const getUsers = async (req, res, next) => {
 
 const signup = async (req, res, next) => {
     const errors = validationResult(req);
-    console.log(errors);
     if (!errors.isEmpty()) {
         const error = new HttpError("입력이 유효하지 않음", 422);
         return next(error);
@@ -38,8 +37,7 @@ const signup = async (req, res, next) => {
         name,
         email,
         password,
-        imageUrl:
-            "https://avatars0.githubusercontent.com/u/58314572?s=460&u=39e2a1d2c384262e78f69dbec557078a05dae19c&v=4",
+        imageUrl: req.file.path,
         places: [],
     });
 
@@ -50,7 +48,10 @@ const signup = async (req, res, next) => {
         return next(err);
     }
 
-    res.status(201).json({ user: createdUser.toObject({ getters: true }) });
+    res.status(201).json({
+        message: "회원가입 완료",
+        user: createdUser.toObject({ getters: true }),
+    });
 };
 
 const login = async (req, res, next) => {
@@ -68,7 +69,10 @@ const login = async (req, res, next) => {
         return next(error);
     }
 
-    res.json({ message: "로그인 완료" });
+    res.json({
+        message: "로그인 완료",
+        user: existingUser.toObject({ getters: true }),
+    });
 };
 
 exports.getUsers = getUsers;
