@@ -101,6 +101,7 @@ const updatePlace = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const error = new HttpError("유효하지 않은 입력", 422);
+        console.log(errors);
         return next(error);
     }
 

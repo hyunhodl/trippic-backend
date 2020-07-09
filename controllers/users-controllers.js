@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
 const HttpError = require("../models/http-error");
@@ -56,9 +57,24 @@ const signup = async (req, res, next) => {
         return next(err);
     }
 
+    let token;
+    try {
+        token = await jwt.sign(
+            {
+                userId: createdUser.id,
+                email: createdUser.email,
+            },
+            "supersecret_dont_share_this",
+            { expiresIn: "1h" }
+        );
+    } catch (error) {
+        return next(error);
+    }
+
     res.status(201).json({
-        message: "회원가입 완료",
-        user: createdUser.toObject({ getters: true }),
+        userId: createdUser.id,
+        email: createdUser.email,
+        token: token,
     });
 };
 
@@ -89,9 +105,24 @@ const login = async (req, res, next) => {
         return next(error);
     }
 
-    res.json({
-        message: "로그인 완료",
-        user: existingUser.toObject({ getters: true }),
+    let token;
+    try {
+        token = await jwt.sign(
+            {
+                userId: existingUser.id,
+                email: existingUser.email,
+            },
+            "supersecret_dont_share_this",
+            { expiresIn: "1h" }
+        );
+    } catch (error) {
+        return next(error);
+    }
+
+    res.status(201).json({
+        userId: existingUser.id,
+        email: existingUser.email,
+        token: token,
     });
 };
 
