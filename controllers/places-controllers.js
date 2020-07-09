@@ -101,7 +101,6 @@ const updatePlace = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const error = new HttpError("유효하지 않은 입력", 422);
-        console.log(errors);
         return next(error);
     }
 
@@ -117,6 +116,11 @@ const updatePlace = async (req, res, next) => {
 
     if (!place) {
         const error = new HttpError("존재하지 않는 장소", 404);
+        return next(error);
+    }
+
+    if (place.creator.toString() !== req.userData.userId) {
+        const error = new HttpError("권한이 없습니다.", 401);
         return next(error);
     }
 
@@ -144,6 +148,14 @@ const deletePlace = async (req, res, next) => {
 
     if (!place) {
         const error = new HttpError("존재하지 않는 장소", 404);
+        return next(error);
+    }
+
+    console.log("장소에서 얻은 아이디", place.creator.toString());
+    console.log("토큰에서 얻은 아이디", req.userData.userId);
+
+    if (place.creator.id !== req.userData.userId) {
+        const error = new HttpError("권한이 없습니다.", 401);
         return next(error);
     }
 
