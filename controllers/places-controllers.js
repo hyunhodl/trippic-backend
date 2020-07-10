@@ -36,8 +36,8 @@ const getPlacesByUserId = async (req, res, next) => {
         return next(error);
     }
 
-    if (!user || user.places.length === 0) {
-        const err = new HttpError("유저 아이디에 해당하는 장소가 없음", 404);
+    if (!user) {
+        const err = new HttpError("존재하지 않는 유저", 404);
         return next(err);
     }
 
@@ -53,7 +53,7 @@ const createPlace = async (req, res, next) => {
         return next(error);
     }
 
-    const { title, description, address, creator } = req.body;
+    const { title, description, address } = req.body;
 
     let coordinates;
     try {
@@ -67,13 +67,13 @@ const createPlace = async (req, res, next) => {
         description,
         address,
         location: coordinates,
-        creator,
+        creator: req.userData.userId,
         image: req.file.path,
     });
 
     let user;
     try {
-        user = await User.findById(creator);
+        user = await User.findById(req.userData.userId);
     } catch (error) {
         return next(error);
     }
@@ -150,9 +150,6 @@ const deletePlace = async (req, res, next) => {
         const error = new HttpError("존재하지 않는 장소", 404);
         return next(error);
     }
-
-    console.log("장소에서 얻은 아이디", place.creator.toString());
-    console.log("토큰에서 얻은 아이디", req.userData.userId);
 
     if (place.creator.id !== req.userData.userId) {
         const error = new HttpError("권한이 없습니다.", 401);

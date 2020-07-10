@@ -6,3 +6,6 @@ npm-debug.log*
 
 # Data
 /uploads
+
+# env
+nodemon.json

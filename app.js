@@ -39,7 +39,7 @@ app.use((error, req, res, next) => {
 
 mongoose
     .connect(
-        "mongodb+srv://hyunho:vX3z0RhUB6S77ZRC@cluster0-dzgjd.mongodb.net/trippic?retryWrites=true&w=majority"
+        `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0-dzgjd.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
     )
     .then(() => {
         console.log("DB 연결 성공");

@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
         if (!token) {
             throw new Error("인증 실패");
         }
-        const decodedToken = jwt.verify(token, "supersecret_dont_share_this");
+        const decodedToken = jwt.verify(token, process.env.JWT_KEY);
         req.userData = {
             userId: decodedToken.userId,
             email: decodedToken.email,
