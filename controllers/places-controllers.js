@@ -1,12 +1,14 @@
-const fs = require("fs");
+// const fs = require("fs");
 
 const { validationResult } = require("express-validator");
 const mongoose = require("mongoose");
 
-const HttpError = require("../models/http-error");
-const { getCoordsForAddress } = require("../util/location");
 const Place = require("../models/place");
 const User = require("../models/user");
+
+const HttpError = require("../models/http-error");
+const { getCoordsForAddress } = require("../util/location");
+const { fileDelete } = require("../middlewares/file-upload");
 
 const getPlaceById = async (req, res, next) => {
     const placeId = req.params.placeId;
@@ -68,7 +70,7 @@ const createPlace = async (req, res, next) => {
         address,
         location: coordinates,
         creator: req.userData.userId,
-        image: req.file.path,
+        image: req.file.key,
     });
 
     let user;
@@ -156,7 +158,8 @@ const deletePlace = async (req, res, next) => {
         return next(error);
     }
 
-    const imagePath = place.image;
+    // const imagePath = place.image;
+    const imageKey = place.image;
 
     try {
         const sess = await mongoose.startSession();
@@ -169,7 +172,8 @@ const deletePlace = async (req, res, next) => {
         return next(error);
     }
 
-    fs.unlink(imagePath, (err) => console.log(err));
+    // fs.unlink(imagePath, (err) => console.log(err));
+    fileDelete(imageKey);
 
     res.json({ message: "장소 삭제 완료" });
 };

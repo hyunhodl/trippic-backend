@@ -1,4 +1,3 @@
-const fs = require("fs");
 const path = require("path");
 
 const express = require("express");
@@ -9,6 +8,7 @@ const cors = require("cors");
 const placesRoutes = require("./routes/places-routes");
 const usersRoutes = require("./routes/users-routes");
 const HttpError = require("./models/http-error");
+const { fileDelete } = require("./middlewares/file-upload");
 
 const app = express();
 
@@ -27,7 +27,12 @@ app.use((req, res, next) => {
 
 app.use((error, req, res, next) => {
     if (req.file) {
-        fs.unlink(req.file.path, (err) => console.log(err));
+        // fs.unlink(req.file.path, (err) => console.log(err));
+        fileDelete(req.file.key, (err, data) => {
+            if (err) {
+                console.log(err);
+            }
+        });
     }
 
     if (res.headerSent) {
